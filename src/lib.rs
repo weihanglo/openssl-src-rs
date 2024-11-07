@@ -292,6 +292,14 @@ impl Build {
             }
         }
 
+        if target.contains("android") || target.contains("linux") {
+            if let Ok(ptr_width) = env::var("CARGO_CFG_TARGET_POINTER_WIDTH") {
+                if ptr_width == "32" {
+                    configure.arg("-D__STDC_NO_ATOMICS__");
+                }
+            }
+        }
+
         let os = match target {
             "aarch64-apple-darwin" => "darwin64-arm64-cc",
             // Note that this, and all other android targets, aren't using the
